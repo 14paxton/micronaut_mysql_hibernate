@@ -1,0 +1,314 @@
+### create integration
+POST http://localhost:8082/ssi/
+Content-Type: application/json
+
+{
+  "companyCode":        "{{companyCode}}",
+  "tbeCompanyCode":     null,
+  "externalClientId":   null,
+  "tbexPassword":       "T@@@@@@L",
+  "organization":       1,
+ "clientEntityMap": {
+	  "GNDR_MAP":    [
+		{
+		  "externalCode": "code",
+		  "description":  "gender stuff",
+		  "value":        "DECLINE"
+		}
+	  ],
+	  "ETHNIC_MAP":  [
+		{
+		  "externalCode": "code",
+		  "description":  "phone stuff",
+		  "value":        "OTHER"
+		}
+	  ],
+	  "LANG_MAP":    [
+		{
+		  "externalCode": "code",
+		  "description":  "language stuff",
+		  "value":        "chilli"
+		}
+	  ],
+	  "PHONTYP_MAP": [
+		{
+		  "externalCode": "code",
+		  "description":  "phone stuff",
+		  "value":        "MOBIL"
+		}
+	  ],
+	  "ASMNT_MAP":   [
+		{
+		  "externalCode": "911",
+		  "description":  "assessment stuff",
+		  "value":        "99999"
+		},
+		{
+		  "externalCode": "922",
+		  "description":  "assessment stuff",
+		  "value":        "99955599"
+		}
+	  ],
+	  "VETERAN_MAP": [
+		{
+		  "description": "ive seen stuff"
+		}
+	  ],
+	  "STPRV_MAP":   [
+		{
+		  "externalCode": "code",
+		  "description":  "state stuff",
+		  "value":        "ne"
+		}
+	  ],
+	  "CNTRY_MAP":   [
+		{
+		  "externalCode": "code",
+		  "description":  "cont stuff",
+		  "value":        "Fiji"
+		}
+	  ]
+	},
+  "clientResultConfig": {
+    "assessmentReportUrlType": "REQ_CORE_AUTH",
+    "retryCount":              3,
+    "assessmentResultXSLOut":  null,
+    "basicAuthPassword":       "result_test",
+    "description":             "get sum",
+    "basicAuthUsername":       "effing_pw",
+    "includeScoringGroupData": true,
+    "endpointURL":             "https://www.google.com",
+    "transformResult":         true,
+    "rest":                    {
+      "httpSendMethod": "POST",
+      "contentType":    "application/json",
+      "payloadFormat":  "JSON"
+    },
+    "email":                   {
+      "toAddressList": "bpaxton@mailinator, hello@gmail.com",
+      "bodyHeader":    "b hadder",
+      "subject":       "a matter of life or death",
+      "ccAddressList": "no@gmail.com"
+    },
+    "soap":                    {
+      "binarySecTokenEncodingType": "wsse:Base64Binary",
+      "wsSecurityPassword":         "x",
+      "soapAction":                 "UPDATERESULTS",
+      "binarySecTokenId":           "x",
+      "wsSecurityUsername":         "x",
+      "binarySecTokenValueType":    "wsse:X509v3"
+    },
+    "ftp":                     {
+      "ftpUsername":           "dirk_diggler",
+      "ftpRemoteBaseDir":      "shrug",
+      "ftpPassword":           "rando",
+      "ftpServer":             "sftp.peopleadmin.com",
+      "ftpPrivateKeyLocation": "my pocket",
+      "ftpPort":               42069,
+      "payloadFormat":         "XML"
+    }
+  },
+  "wSConfig":           {
+    "allowNoAuth":                   false,
+    "active":                        true,
+    "transformRequestIn":            false,
+    "transformRequestResponse":      false,
+    "transformStatusIn":             false,
+    "transformStatusResponse":       true,
+    "assessmentOrderRequestXSLIn":   null,
+    "assessmentOrderRequestXSLOut":  null,
+    "assessmentStatusRequestXSLIn":  null,
+    "assessmentStatusRequestXSLOut": null,
+    "countryCodeFormat":             "alpha2",
+    "customAORMap": {
+		"SS_Facility": "locationCode",
+		"Title":       "jobTitle"
+	  },
+    "description":                   "get sum",
+    "rest":                          {
+      "apiWebAddress": "https://www.google.com",
+      "apiPassword":   "@@@@@",
+      "apiUsername":   "mr_smith"
+    },
+    "ftp":                           {
+      "fetchFileStringPattern": ".//doc",
+      "ftpUsername":            "dirk_diggler",
+      "ftpRemoteBaseDir":       "shrug",
+      "ftpPassword":            "rando",
+      "ftpServer":              "sftp.peopleadmin.com",
+      "ftpArchiveLimitSecs":    1209600,
+      "ftpPrivateKeyLocation":  "my pocket",
+      "ftpPort":                42069
+    },
+    "soap":                          {
+      "assessmentResultRequestXSLOut": "xsl out",
+      "binarySecTokenEncodingType":    "wsse:Base64Binary",
+      "wsSecurityPassword":            "x",
+      "binarySecTokenId":              "x",
+      "wsSecurityUsername":            "x",
+      "binarySecTokenValueType":       "wsse:X509v3"
+    }
+  }
+}
+
+### List integration
+// @no-log
+GET http://localhost:8082/ssi
+Content-Type: application/json
+
+### Find integration
+GET http://localhost:8082/ssi/{{companyCode}}
+
+### update integration
+// @no-log
+PUT http://localhost:8082/ssi/
+Content-Type: application/json
+
+{
+  "companyCode":        "{{companyCode}}",
+  "tbeCompanyCode":     "99",
+  "externalClientId":   "x99xx",
+  "tbexPassword":       "x99xx",
+  "organization":       2,
+  "clientEntityMap":    {
+	"GNDR_MAP":    [
+	  {
+		"externalCode": "crankin",
+		"description":  "gender stuff",
+		"value":        "DECLINE"
+	  }
+	],
+	"ETHNIC_MAP":  [
+	  {
+		"externalCode": "crankin",
+		"description":  "phone stuff",
+		"value":        "OTHER"
+	  }
+	],
+	"LANG_MAP":    [
+	  {
+		"externalCode": "crankin",
+		"description":  "language stuff",
+		"value":        "chilli"
+	  }
+	],
+	"PHONTYP_MAP": [
+	  {
+		"externalCode": "crankin",
+		"description":  "phone stuff",
+		"value":        "MOBIL"
+	  }
+	],
+	"ASMNT_MAP":   [
+	  {
+		"externalCode": "911",
+		"description":  "assessment stuff",
+		"value":        "99999"
+	  },
+	  {
+		"externalCode": "922",
+		"description":  "assessment stuff",
+		"value":        "99955599"
+	  }
+	],
+	"VETERAN_MAP": [
+	  {
+		"description": "ive seen stuff"
+	  }
+	],
+	"STPRV_MAP":   [
+	  {
+		"externalCode": "code",
+		"description":  "state stuff",
+		"value":        "ne"
+	  }
+	],
+	"CNTRY_MAP":   [
+	  {
+		"externalCode": "code",
+		"description":  "cont stuff",
+		"value":        "Fiji"
+	  }
+	]
+  },
+  "clientResultConfig": {
+	"assessmentReportUrlType": "REQ_CORE_AUTH",
+	"retryCount":              3,
+	"assessmentResultXSLOut":  null,
+	"basicAuthPassword":       "shoot me",
+	"description":             "get sum",
+	"basicAuthUsername":       "effing_pw",
+	"includeScoringGroupData": true,
+	"endpointURL":             "https://www.google.com",
+	"transformResult":         true,
+	"rest":                    {
+	  "httpSendMethod": "POST",
+	  "contentType":    "s000000",
+	  "payloadFormat":  "JSON"
+	},
+	"email":                   {
+	  "toAddressList": "bpaxton@mailinator, hello@gmail.com",
+	  "bodyHeader":    "b hadder",
+	  "subject":       "a matter of life or death",
+	  "ccAddressList": "no@gmail.com"
+	},
+	"soap":                    {
+	  "binarySecTokenEncodingType": "wsse:Base64Binary",
+	  "wsSecurityPassword":         "x",
+	  "soapAction":                 "UPDATERESULTS",
+	  "binarySecTokenId":           "x",
+	  "wsSecurityUsername":         "x",
+	  "binarySecTokenValueType":    "wsse:X509v3"
+	},
+	"ftp":                     {
+	  "ftpUsername":           "zzzzzz",
+	  "ftpRemoteBaseDir":      "shrug",
+	  "ftpPassword":           "zzzzzz",
+	  "ftpServer":             "sftp.peopleadmin.com",
+	  "ftpPrivateKeyLocation": "my pocket",
+	  "ftpPort":               42069,
+	  "payloadFormat":         "XML"
+	}
+  },
+  "wSConfig":           {
+	"allowNoAuth":                   false,
+	"active":                        true,
+	"transformRequestIn":            false,
+	"transformRequestResponse":      false,
+	"transformStatusIn":             false,
+	"transformStatusResponse":       true,
+	"assessmentOrderRequestXSLIn":   null,
+	"assessmentOrderRequestXSLOut":  null,
+	"assessmentStatusRequestXSLIn":  null,
+	"assessmentStatusRequestXSLOut": null,
+	"countryCodeFormat":             "alpha2",
+	"customAORMap":                  {
+	  "SS_Facility": "zzzzzz",
+	  "Title":       "zzzzzzz"
+	},
+	"description":                   "get sum",
+	"rest":                          {
+	  "apiWebAddress": "https://www.google.com",
+	  "apiPassword":   "@@@@@",
+	  "apiUsername":   "zzzzzzzz"
+	},
+	"ftp":                           {
+	  "fetchFileStringPattern": ".//doc",
+	  "ftpUsername":            "dirk_diggler",
+	  "ftpRemoteBaseDir":       "shrug",
+	  "ftpPassword":            "rando",
+	  "ftpServer":              "sftp.peopleadmin.com",
+	  "ftpArchiveLimitSecs":    1209600,
+	  "ftpPrivateKeyLocation":  "my pocket",
+	  "ftpPort":                42069
+	},
+	"soap":                          {
+	  "assessmentResultRequestXSLOut": "xsl out",
+	  "binarySecTokenEncodingType":    "wsse:Base64zBinary",
+	  "wsSecurityPassword":            "xz",
+	  "binarySecTokenId":              "zx",
+	  "wsSecurityUsername":            "xz",
+	  "binarySecTokenValueType":       "wsse:Xz509v3"
+	}
+  }
+}

@@ -1,0 +1,100 @@
+plugins {
+    id("groovy")
+    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("io.micronaut.application") version "3.6.3"
+    id("io.micronaut.test-resources") version "3.6.3"
+    id 'org.graalvm.buildtools.native' version '0.9.13'
+}
+
+version = "0.1"
+group = "com.ssi"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    annotationProcessor("io.micronaut.data:micronaut-data-processor")
+    annotationProcessor("io.micronaut:micronaut-http-validation")
+    annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
+    implementation("io.micronaut:micronaut-http-client")
+//    implementation("io.micronaut.beanvalidation:micronaut-hibernate-validator")
+    implementation("io.micronaut.data:micronaut-data-hibernate-reactive")
+//    implementation("io.micronaut.reactor:micronaut-reactor")
+    implementation("io.micronaut.reactor:micronaut-reactor-http-client")
+    implementation("io.vertx:vertx-mysql-client")
+    implementation("jakarta.annotation:jakarta.annotation-api")
+    runtimeOnly("ch.qos.logback:logback-classic")
+    testResourcesService("mysql:mysql-connector-java")
+    compileOnly("org.graalvm.nativeimage:svm")
+
+    implementation("io.micronaut:micronaut-validation")
+
+
+    /*per micronaut data documentation
+       To allow JSON to be serialized and deserialized in entity properties you must have
+            Jackson and the micronaut-runtime module your classpath.*/
+    implementation("io.micronaut:micronaut-runtime")
+//    compileOnly("io.micronaut:micronaut-jackson-databind")
+    implementation("io.micronaut.serde:micronaut-serde-jackson:1.3.3")
+
+    //for Nullable annotations
+    //Micronaut no longer exports any third party dependency for nullability annotations.
+    //This warning is harmless and can be ignored. To eliminate this warning, add the following dependency to your project’s compile only classpath:
+    // documentation : https://docs.micronaut.io/latest/guide/index.html#java
+    compileOnly("com.google.code.findbugs:jsr305")
+
+    //remove dependency for macos
+    implementation("io.netty:netty-resolver-dns-native-macos:4.1.85.Final")
+}
+
+
+//setting to run in dev
+//run {
+//    systemProperty('micronaut.environments', 'dev')
+
+//}
+
+application {
+    mainClass.set("com.ssi.Application")
+}
+java {
+    sourceCompatibility = JavaVersion.toVersion("17")
+    targetCompatibility = JavaVersion.toVersion("17")
+}
+
+graalvmNative {
+    toolchainDetection = false
+
+    binaries {
+        main {
+            javaLauncher = javaToolchains.launcherFor {
+                languageVersion = JavaLanguageVersion.of(17)
+                vendor = JvmVendorSpec.matching("BellSoft")
+            }
+            imageName.set('graal-vm-ssi')
+            buildArgs.add('--verbose')
+        }
+    }
+}
+
+micronaut {
+    runtime("netty")
+    testRuntime("spock2")
+    processing {
+        incremental(true)
+        annotations("com.ssi.*")
+    }
+    testResources {
+        additionalModules.add("hibernate-reactive-mysql")
+    }
+}
+
+//serialization docs say to add to use  Jackson Databind, but continue using Jackson Annotations as a programming model and Jackson Core as a runtime
+//// documentation https://micronaut-projects.github.io/micronaut-serialization/snapshot/guide/#jacksonQuick
+//configurations.all {
+//    resolutionStrategy.dependencySubstitution {
+//        substitute(module("io.micronaut:micronaut-jackson-databind"))
+//                .using(module("io.micronaut.serde:micronaut-serde-jackson:1.3.2"))
+//    }
+//}
