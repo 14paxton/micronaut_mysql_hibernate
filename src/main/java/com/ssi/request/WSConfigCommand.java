@@ -9,6 +9,7 @@ import io.micronaut.serde.annotation.Serdeable;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.SortedMap;
 
 @Requires(classes = CountryCodeFormat.class)
 @Serdeable
@@ -26,7 +27,7 @@ public class WSConfigCommand {
     private final RequestSOAP soap;
 
     @Nullable
-    private final HashMap<String, String> customAORMap;
+    private final SortedMap<String, String> customAORMap;
 
     @Nullable
     @Valid
@@ -66,7 +67,7 @@ public class WSConfigCommand {
     final String description;
 
      @Creator
-    public WSConfigCommand(@Nullable RequestREST rest, @Nullable RequestFTP ftp, @Nullable RequestSOAP soap, @Nullable HashMap<String, String> customAORMap, @Nullable CountryCodeFormat countryCodeFormat, @Nullable Boolean transformRequestIn, @Nullable Boolean transformRequestResponse, @Nullable Boolean transformStatusIn, @Nullable Boolean transformStatusResponse, @Nullable String assessmentOrderRequestXSLIn, @Nullable String assessmentOrderRequestXSLOut, @Nullable String assessmentStatusRequestXSLIn, @Nullable String assessmentStatusRequestXSLOut, @Nullable String description) {
+    public WSConfigCommand(@Nullable RequestREST rest, @Nullable RequestFTP ftp, @Nullable RequestSOAP soap, @Nullable SortedMap<String, String> customAORMap, @Nullable CountryCodeFormat countryCodeFormat, @Nullable Boolean transformRequestIn, @Nullable Boolean transformRequestResponse, @Nullable Boolean transformStatusIn, @Nullable Boolean transformStatusResponse, @Nullable String assessmentOrderRequestXSLIn, @Nullable String assessmentOrderRequestXSLOut, @Nullable String assessmentStatusRequestXSLIn, @Nullable String assessmentStatusRequestXSLOut, @Nullable String description) {
         this.rest = rest;
         this.ftp = ftp;
         this.soap = soap;
@@ -99,7 +100,7 @@ public class WSConfigCommand {
     }
 
     @Nullable
-    public HashMap<String, String> getCustomAORMap() {
+    public SortedMap<String, String> getCustomAORMap() {
         return customAORMap;
     }
 

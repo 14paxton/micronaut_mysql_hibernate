@@ -28,8 +28,10 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.sql.Types;
 import java.util.*;
+import java.util.concurrent.ConcurrentMap;
 
 @Requires(classes = CountryCodeFormat.class)
 @ReflectiveAccess
@@ -39,13 +41,14 @@ import java.util.*;
 @TypeHint(
         value = {
                 HashMap.class,
-                LinkedHashMap.class
+                LinkedHashMap.class,
+                TreeMap.class
         },
         accessType = TypeHint.AccessType.ALL_DECLARED_CONSTRUCTORS
 )
-@TypeDefs({
-        @org.hibernate.annotations.TypeDef(name = "hashmap", typeClass = HashMap.class),
-})
+//@TypeDefs({
+//        @org.hibernate.annotations.TypeDef(name = "hashmap", typeClass = TreeMap.class, defaultForType = HashMap.class),
+//})
 @Table(name = "w_s_config")
 public class WSConfig {
     @JsonIgnore
@@ -67,8 +70,14 @@ public class WSConfig {
     private RequestFTP ftp;
 
     //    @SuppressWarnings("org.hibernate.type.SerializableType")
-    @Nullable
-    @TypeDef(type = DataType.JSON)
+//    @Nullable
+//    @Type(
+//            type = "java.io.Serializable",
+//            parameters = {@Parameter(name = "classname", value = "java.util.TreeMap")}
+//    )
+//    @TypeDef(type = DataType.JSON)
+//    @Column(name = "custom_aor_map", columnDefinition = "varbinary(255)")
+//    private SortedMap customAORMap = new TreeMap<String, String>();
 
 //    @Column(name = "custom_aor_map", columnDefinition = "tinyblob")
 //    @CollectionTable(name = "custom_aor_map")
@@ -80,16 +89,16 @@ public class WSConfig {
 //    )
 //    @ElementCollection(targetClass = HashMap.class, fetch = FetchType.EAGER)
 
-    @Type(type = "java.io.Serializable")
-    @ElementCollection(targetClass = Map.class, fetch = FetchType.EAGER)
-    @CollectionTable(
-            name = "custom_aor_map",
-            joinColumns = @JoinColumn(name = "w_s_config_id")
-    )
-    @MapKeyColumn(name = "custom_aor_map_key")
-    @MapKeyClass(String.class)
-    @Column(name = "custom_aor_map")
-    private Map<String, String> customAORMap = new HashMap<>();
+//    @Type(type = "java.io.Serializable")
+//    @ElementCollection(targetClass = Map.class, fetch = FetchType.EAGER)
+//    @CollectionTable(
+//            name = "custom_aor_map",
+//            joinColumns = @JoinColumn(name = "w_s_config_id")
+//    )
+//    @MapKeyColumn(name = "custom_aor_map_key", unique = true)
+//    @MapKeyClass(String.class)
+//    @Column(name = "custom_aor_map_value")
+
 
     @Nullable
     @Enumerated(EnumType.STRING)
@@ -136,7 +145,7 @@ public class WSConfig {
     public WSConfig(@Nullable RequestREST rest,
                     @Nullable RequestSOAP soap,
                     @Nullable RequestFTP ftp,
-                    @Nullable Map<String, String> customAORMap,
+//                    @Nullable SortedMap<String, String> customAORMap,
                     @Nullable CountryCodeFormat countryCodeFormat,
                     @Nullable Boolean allowNoAuth,
                     @Nullable Boolean active,
@@ -162,8 +171,8 @@ public class WSConfig {
             ftp.setWSConfig(this);
             this.ftp = ftp;
         }
-        Optional<Map<String, String>> aorMap = Optional.ofNullable(customAORMap);
-        aorMap.ifPresent(map -> this.customAORMap = map);
+//        Optional<SortedMap<String, String>> aorMap = Optional.ofNullable(customAORMap);
+//        aorMap.ifPresent(map -> this.customAORMap = map);
         this.countryCodeFormat = countryCodeFormat;
         this.allowNoAuth = allowNoAuth;
         this.active = active;
@@ -183,7 +192,7 @@ public class WSConfig {
         this(wSConfigCommand.getRest(),
                 wSConfigCommand.getSoap(),
                 wSConfigCommand.getFtp(),
-                wSConfigCommand.getCustomAORMap(),
+//                wSConfigCommand.getCustomAORMap(),
                 wSConfigCommand.getCountryCodeFormat(),
                 wSConfigCommand.getAllowNoAuth(),
                 wSConfigCommand.getActive(),
@@ -248,30 +257,33 @@ public class WSConfig {
         return this;
     }
 
-    @Nullable
-    @JsonGetter("customAORMap")
-    public Map<String, String> getCustomAORMap() {
-        return this.customAORMap;
-    }
+//    @Nullable
+//    @JsonGetter("customAORMap")
+//    public SortedMap getCustomAORMap() {
+//        return this.customAORMap;
+//    }
 
 //    @JsonAnySetter
 //    public void add(String key, String value) {
-//        if (customAORMap != null) {
-//            customAORMap.put(key, value);
+//        if (this.customAORMap == null) {
+//            this.customAORMap = new TreeMap<String, String>();
 //        }
+//
+//        this.customAORMap.put(key, value);
 //    }
 
-    @JsonSetter("customAORMap")
-    public void setAORMap(String customAORMap) throws JsonProcessingException {
-        TypeReference<Map<String, String>> typeRef = new TypeReference<Map<String, String>>() {
-        };
-        final ObjectReader r = new ObjectMapper().readerFor(typeRef);
-        this.customAORMap = r.readValue(customAORMap);
-    }
+//    @JsonSetter("customAORMap")
+//    public void setAORMap(String customAORMap) throws JsonProcessingException {
+//        TypeReference<SortedMap<String, String>> typeRef = new TypeReference<SortedMap<String, String>>() {
+//        };
+//        final ObjectReader r = new ObjectMapper().readerFor(typeRef);
+//        this.customAORMap = r.readValue(customAORMap);
+//    }
 
-    public void setCustomAORMap(@Nullable Map<String, String> customAORMap) {
-        this.customAORMap = customAORMap;
-    }
+//    @JsonSetter("customAORMap")
+//    public void setCustomAORMap(@Nullable SortedMap<String, String> customAORMap) {
+//        this.customAORMap = customAORMap;
+//    }
 
     @Nullable
     public CountryCodeFormat getCountryCodeFormat() {
