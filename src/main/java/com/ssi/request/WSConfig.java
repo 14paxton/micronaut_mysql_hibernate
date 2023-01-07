@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.ssi.Enums.CountryCodeFormat;
 import com.ssi.integration.Integration;
+import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
+import com.vladmihalcea.hibernate.type.json.JsonBlobType;
 import io.micronaut.configuration.hibernate.jpa.proxy.GenerateProxy;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Creator;
@@ -17,13 +19,16 @@ import io.micronaut.data.annotation.MappedProperty;
 import io.micronaut.data.annotation.TypeDef;
 import io.micronaut.data.model.DataType;
 import io.micronaut.serde.annotation.Serdeable;
-import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.*;
 import org.hibernate.annotations.Parameter;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDefs;
 
 import javax.persistence.*;
+import javax.persistence.MapKeyClass;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import java.sql.Types;
 import java.util.*;
 
 @Requires(classes = CountryCodeFormat.class)
@@ -75,11 +80,15 @@ public class WSConfig {
 //    )
 //    @ElementCollection(targetClass = HashMap.class, fetch = FetchType.EAGER)
 
-    @Basic(fetch = FetchType.EAGER)
-    @Type(type = "hashmap")
-    @MappedProperty
-    @Column(name = "custom_aor_map", columnDefinition = "longblob")
-    @JsonProperty
+    @Type(type = "java.io.Serializable")
+    @ElementCollection(targetClass = Map.class, fetch = FetchType.EAGER)
+    @CollectionTable(
+            name = "custom_aor_map",
+            joinColumns = @JoinColumn(name = "w_s_config_id")
+    )
+    @MapKeyColumn(name = "custom_aor_map_key")
+    @MapKeyClass(String.class)
+    @Column(name = "custom_aor_map")
     private Map<String, String> customAORMap = new HashMap<>();
 
     @Nullable
@@ -127,7 +136,7 @@ public class WSConfig {
     public WSConfig(@Nullable RequestREST rest,
                     @Nullable RequestSOAP soap,
                     @Nullable RequestFTP ftp,
-                    @Nullable HashMap<String, String> customAORMap,
+                    @Nullable Map<String, String> customAORMap,
                     @Nullable CountryCodeFormat countryCodeFormat,
                     @Nullable Boolean allowNoAuth,
                     @Nullable Boolean active,
@@ -153,7 +162,7 @@ public class WSConfig {
             ftp.setWSConfig(this);
             this.ftp = ftp;
         }
-        Optional<HashMap<String, String>> aorMap = Optional.ofNullable(customAORMap);
+        Optional<Map<String, String>> aorMap = Optional.ofNullable(customAORMap);
         aorMap.ifPresent(map -> this.customAORMap = map);
         this.countryCodeFormat = countryCodeFormat;
         this.allowNoAuth = allowNoAuth;
@@ -254,7 +263,8 @@ public class WSConfig {
 
     @JsonSetter("customAORMap")
     public void setAORMap(String customAORMap) throws JsonProcessingException {
-        TypeReference<HashMap<String, String>> typeRef = new TypeReference<HashMap<String, String>>() {};
+        TypeReference<Map<String, String>> typeRef = new TypeReference<Map<String, String>>() {
+        };
         final ObjectReader r = new ObjectMapper().readerFor(typeRef);
         this.customAORMap = r.readValue(customAORMap);
     }
