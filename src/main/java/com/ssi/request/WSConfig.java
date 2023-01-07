@@ -1,7 +1,10 @@
 package com.ssi.request;
 
 import com.fasterxml.jackson.annotation.*;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
 import com.ssi.Enums.CountryCodeFormat;
 import com.ssi.integration.Integration;
 import io.micronaut.configuration.hibernate.jpa.proxy.GenerateProxy;
@@ -10,18 +13,16 @@ import io.micronaut.core.annotation.Creator;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.annotation.ReflectiveAccess;
 import io.micronaut.core.annotation.TypeHint;
-import io.micronaut.data.annotation.*;
+import io.micronaut.data.annotation.MappedProperty;
+import io.micronaut.data.annotation.TypeDef;
 import io.micronaut.data.model.DataType;
 import io.micronaut.serde.annotation.Serdeable;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDefs;
 
 import javax.persistence.*;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import java.util.*;
 
@@ -29,13 +30,17 @@ import java.util.*;
 @ReflectiveAccess
 @Serdeable
 @Entity
+@GenerateProxy
 @TypeHint(
         value = {
                 HashMap.class,
-                Map.class
+                LinkedHashMap.class
         },
         accessType = TypeHint.AccessType.ALL_DECLARED_CONSTRUCTORS
 )
+@TypeDefs({
+        @org.hibernate.annotations.TypeDef(name = "hashmap", typeClass = HashMap.class),
+})
 @Table(name = "w_s_config")
 public class WSConfig {
     @JsonIgnore
@@ -56,13 +61,27 @@ public class WSConfig {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private RequestFTP ftp;
 
-    @SuppressWarnings("JpaAttributeTypeInspection")
+    //    @SuppressWarnings("org.hibernate.type.SerializableType")
     @Nullable
     @TypeDef(type = DataType.JSON)
-    @Column(name = "custom_aor_map", columnDefinition = "tinyblob")
-    @CollectionTable
-    @ElementCollection(targetClass = HashMap.class , fetch = FetchType.EAGER)
-    private Map<String, String> customAORMap;
+
+//    @Column(name = "custom_aor_map", columnDefinition = "tinyblob")
+//    @CollectionTable(name = "custom_aor_map")
+//    @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
+//    @MapKeyColumn(name = "custom_aor_map_key")
+
+//    @Type(type = "org.hibernate.type.ObjectType",
+//            parameters = { @Parameter( name = "classname", value = "java.util.HashMap" )}
+//    )
+//    @ElementCollection(targetClass = HashMap.class, fetch = FetchType.EAGER)
+
+    @Basic(fetch = FetchType.EAGER)
+    @Type(type = "hashmap")
+    @MappedProperty
+    @Column(name = "custom_aor_map", columnDefinition = "longblob")
+    @JsonProperty
+    private Map<String, String> customAORMap = new HashMap<>();
+
     @Nullable
     @Enumerated(EnumType.STRING)
     private CountryCodeFormat countryCodeFormat;
@@ -220,10 +239,10 @@ public class WSConfig {
         return this;
     }
 
-
     @Nullable
+    @JsonGetter("customAORMap")
     public Map<String, String> getCustomAORMap() {
-        return customAORMap;
+        return this.customAORMap;
     }
 
 //    @JsonAnySetter
@@ -233,10 +252,15 @@ public class WSConfig {
 //        }
 //    }
 
-    //    @JsonSetter("customAORMap")
-    public WSConfig setCustomAORMap(@Nullable Map<String, String> customAORMap) {
+    @JsonSetter("customAORMap")
+    public void setAORMap(String customAORMap) throws JsonProcessingException {
+        TypeReference<HashMap<String, String>> typeRef = new TypeReference<HashMap<String, String>>() {};
+        final ObjectReader r = new ObjectMapper().readerFor(typeRef);
+        this.customAORMap = r.readValue(customAORMap);
+    }
+
+    public void setCustomAORMap(@Nullable Map<String, String> customAORMap) {
         this.customAORMap = customAORMap;
-        return this;
     }
 
     @Nullable

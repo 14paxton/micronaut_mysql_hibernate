@@ -230,10 +230,6 @@
   "allDeclaredMethods":true
 },
 {
-  "name":"java.util.LinkedHashMap",
-  "allDeclaredMethods":true
-},
-{
   "name":"java.util.LinkedHashSet",
   "allDeclaredMethods":true
 },

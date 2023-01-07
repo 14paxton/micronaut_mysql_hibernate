@@ -152,7 +152,6 @@ Content-Type: application/json
 }
 
 ### List integration
-// @no-log
 GET http://localhost:8082/ssi
 Content-Type: application/json
 

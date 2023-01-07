@@ -42,6 +42,7 @@ public interface IntegrationRepository extends ReactorPageableRepository<Integra
     Mono<Integration> findById(@NonNull UUID id);
 
     @NonNull
+//    @EntityGraph(attributePaths = { "wSConfig", "wSConfig.customAORMap", "wSConfig.integration", "wSConfig.rest", "wSConfig.soap", "wSConfig.ftp"})
     Flux<Integration> findAll();
 
     default Mono<Integration> findByCompanyCode(@NonNull String companyCode) {

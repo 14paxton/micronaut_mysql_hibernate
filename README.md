@@ -84,6 +84,20 @@ public class Owner {
 ```
 
 
+### [Joins](https://micronaut-projects.github.io/micronaut-data/latest/guide/#_jpa_2_1_entity_graphs)
+```java
+@Repository
+public interface ProductRepository extends CrudRepository<Product, Long>, JpaSpecificationExecutor<Product> {
+    @Join(value = "manufacturer", type = Join.Type.FETCH) // 
+    List<Product> list();
+}
+```
+
+#### JPA Entity Graphs
+```java
+@EntityGraph(attributePaths = {"manufacturer", "title"}) // 
+List<Product> findAll();
+```
 ---
 
 ---

@@ -5,12 +5,12 @@ micronaut:
     versioning:
       enabled: true
   application:
-    name: selfserviceintegration
+    name: micronaut_mysql_hibernate
 datasources:
   default:
     url: jdbc:mysql://localhost:3306/ssi
     username: root
-    password: T@l3nt
+    password: pword
     dialect: MYSQL
     driverClassName: com.mysql.cj.jdbc.Driver
     db-type: mysql
@@ -24,9 +24,11 @@ jpa:
     reactive: true
     compile-time-hibernate-proxies: true
     entity-scan:
-      classpath: true
-      packages:
-        - 'com.ssi'
+        #      classpath: true
+        packages:
+          - 'com.ssi.integration'
+          - 'com.ssi.request'
+          -  'com.ssi.result'
     properties:
       hibernate:
 #        dialect: org.hibernate.dialect.MySQLDialect
@@ -39,7 +41,7 @@ jpa:
           db-type: mysql
           url: jdbc:mysql://localhost:3306/ssi
           username: root
-          password: T@l3nt
+          password: pword
 #    packages-to-scan:
 #      - 'com.ssi'
 jackson:

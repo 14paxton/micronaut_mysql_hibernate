@@ -27,9 +27,9 @@ dependencies {
     runtimeOnly("ch.qos.logback:logback-classic")
     testResourcesService("mysql:mysql-connector-java")
     compileOnly("org.graalvm.nativeimage:svm")
-
     implementation("io.micronaut:micronaut-validation")
 
+    implementation("com.vladmihalcea:hibernate-types-52:2.21.1")
 
     /*per micronaut data documentation
        To allow JSON to be serialized and deserialized in entity properties you must have
@@ -44,8 +44,8 @@ dependencies {
     // documentation : https://docs.micronaut.io/latest/guide/index.html#java
     compileOnly("com.google.code.findbugs:jsr305")
 
-    //remove dependency for macos
-    implementation("io.netty:netty-resolver-dns-native-macos:4.1.85.Final")
+    //remove dependency for macos apple silicon
+//    implementation("io.netty:netty-resolver-dns-native-macos:4.1.85.Final")
 }
 
 
@@ -68,10 +68,10 @@ graalvmNative {
 
     binaries {
         main {
-            javaLauncher = javaToolchains.launcherFor {
-                languageVersion = JavaLanguageVersion.of(17)
-                vendor = JvmVendorSpec.matching("BellSoft")
-            }
+//            javaLauncher = javaToolchains.launcherFor {
+//                languageVersion = JavaLanguageVersion.of(17)
+//                vendor = JvmVendorSpec.matching("BellSoft")
+//            }
             imageName.set('graal-vm-ssi')
             buildArgs.add('--verbose')
         }
