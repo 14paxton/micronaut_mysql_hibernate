@@ -49,7 +49,7 @@
 
 - ***CREATE***
 ```bash
-curl -i -d '{"companyCode": "MICROSTREAM_bpaxton"}' -H "Content-Type: application/json" -X POST POST http://localhost:8082/ssi
+curl -i -d '{"companyCode": "MICROSTREAM_bpaxton"}' -H "Content-Type: application/json" -X POST http://localhost:8082/ssi
 ```
 - ***LIST*** 
 ```bash

@@ -10,6 +10,7 @@ import io.micronaut.serde.annotation.Serdeable;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Null;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +19,7 @@ public class IntegrationCommand {
     @Nullable
     private final String id;
 
-    @NotBlank
+    @Nullable
     private final String companyCode;
 
     @Nullable
@@ -34,17 +35,17 @@ public class IntegrationCommand {
     private final String tbexPassword;
 
     @Valid
-    @NonNull
+    @Nullable
     private final WSConfigCommand wSConfig;
 
     @Valid
-    @NonNull
+    @Nullable
     private final ClientResultCommand clientResult;
 
     @Nullable
     private final Map<ClientEntityType, List<ClientEntityDetails>> clientEntityMap;
 
-    public IntegrationCommand(@Nullable String id, String companyCode, @Nullable String externalClientId, @Nullable Long organization, @Nullable String tbeCompanyCode, @Nullable String tbexPassword, @NonNull WSConfigCommand wSConfig, @NonNull ClientResultCommand clientResult, @Nullable Map<ClientEntityType, List<ClientEntityDetails>> clientEntityMap) {
+    public IntegrationCommand(@Nullable String id, @Nullable String companyCode, @Nullable String externalClientId, @Nullable Long organization, @Nullable String tbeCompanyCode, @Nullable String tbexPassword, @Nullable WSConfigCommand wSConfig, @Nullable ClientResultCommand clientResult, @Nullable Map<ClientEntityType, List<ClientEntityDetails>> clientEntityMap) {
         this.id = id;
         this.companyCode = companyCode;
         this.externalClientId = externalClientId;
@@ -57,7 +58,7 @@ public class IntegrationCommand {
     }
 
     @Creator
-    public IntegrationCommand(String companyCode, @Nullable String externalClientId, @Nullable Long organization, @Nullable String tbeCompanyCode, @Nullable String tbexPassword, @NonNull WSConfigCommand wSConfig, @NonNull ClientResultCommand clientResultConfig, @Nullable Map<ClientEntityType, List<ClientEntityDetails>> clientEntityMap) {
+    public IntegrationCommand(String companyCode, @Nullable String externalClientId, @Nullable Long organization, @Nullable String tbeCompanyCode, @Nullable String tbexPassword, @Nullable WSConfigCommand wSConfig, @Nullable ClientResultCommand clientResultConfig, @Nullable Map<ClientEntityType, List<ClientEntityDetails>> clientEntityMap) {
         this(null, companyCode,  externalClientId,  organization,  tbeCompanyCode,  tbexPassword, wSConfig, clientResultConfig, clientEntityMap);
     }
 
@@ -66,6 +67,7 @@ public class IntegrationCommand {
         return id;
     }
 
+    @Nullable
     public String getCompanyCode() {
         return companyCode;
     }
@@ -90,12 +92,14 @@ public class IntegrationCommand {
         return tbexPassword;
     }
 
-    @NonNull
+
+    @Nullable
     public WSConfigCommand getwSConfig() {
         return wSConfig;
     }
 
-    @NonNull
+
+    @Nullable
     public ClientResultCommand getClientResult() {
         return clientResult;
     }

@@ -51,10 +51,10 @@ dependencies {
 
 
 //setting to run in dev
-//run {
-//    systemProperty('micronaut.environments', 'dev')
+run {
+    systemProperty('micronaut.environments', 'dev')
 
-//}
+}
 
 application {
     mainClass.set("com.ssi.Application")
@@ -69,10 +69,12 @@ graalvmNative {
 
     binaries {
         main {
-//            javaLauncher = javaToolchains.launcherFor {
-//                languageVersion = JavaLanguageVersion.of(17)
+            javaLauncher = javaToolchains.launcherFor {
+                languageVersion = JavaLanguageVersion.of(17)
 //                vendor = JvmVendorSpec.matching("BellSoft")
-//            }
+                vendor = JvmVendorSpec.matching("GraalVM Community")
+
+            }
             imageName.set('graal-vm-ssi')
             buildArgs.add('--verbose')
         }

@@ -1,5 +1,5 @@
 ### create integration
-POST http://localhost:8082/ssi/
+POST http://localhost:8082/ssi
 Content-Type: application/json
 
 {

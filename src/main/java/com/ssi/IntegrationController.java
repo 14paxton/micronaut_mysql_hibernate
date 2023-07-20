@@ -1,11 +1,14 @@
 package com.ssi;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.ssi.integration.Integration;
 import com.ssi.integration.IntegrationCommand;
 import com.ssi.integration.IntegrationRepository;
 import io.micronaut.core.version.annotation.Version;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.annotation.*;
 import io.micronaut.validation.Validated;
 import reactor.core.publisher.Flux;
@@ -13,6 +16,7 @@ import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -29,6 +33,14 @@ class IntegrationController {
     @Get
     public Flux<Integration> list() {
         return integrationRepository.findAll();
+    }
+
+    @Post("/effing")
+    public MutableHttpResponse<ObjectNode> test(@Body String input) {
+        Map x = Map.of( "name", input);
+        ObjectNode agencyNode = new ObjectMapper().valueToTree(x);
+
+        return HttpResponse.created(agencyNode);
     }
 
     @Post
